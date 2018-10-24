@@ -1,41 +1,33 @@
 'use strict';
 
-function renderTemplate(templateString, data) {
-    return templateString.replace(/\{\{\s*(.*?)\s*\}\}/g,(match,p1) => data[p1]);            
-}
-
-function formatResults (result) {
-    let user = {
-        photo: result.picture.large,
-        firstName: result.name.first,
-        lastName: result.name.last,
-        city: result.location.city,
-        state: result.location.state,
-        email: result.email 
-    } 
-    return user;
-}
-
 const templateString = `<li class="user">
-<img class="user-photo" src="{{ photo }}" alt="Photo of {{ firstName }} {{ lastName }}">
-<div class="user-name">{{ firstName }} {{ lastName }}</div>
-<div class="user-location">{{ city }}, {{ state }}</div>
+<img class="user-photo" src="{{ picture.thumbnail }}" alt="Photo of {{ name.first }} {{ name.last }}">
+<div class="user-name">{{ name.first }} {{ name.last }}</div>
+<div class="user-location">{{ location.city }}, {{ location.state }}</div>
 <div class="user-email">{{ email }}</div>
 </li>`;
+
+function unNestData (string, start) {
+    return string.split('.').reduce( (acc,curr) => {
+        return acc[curr];
+    }, start)
+}
+
+function renderTemplate (templateString, data) {
+    return templateString.replace(/\{\{\s*(.*?)\s*\}\}/g,(match,string) => unNestData(string,data));            
+}
 
 (() => {
     function populateList(results) {
         console.log(results);
-                
+        
         let container = document.getElementsByClassName('container')[0];
         let userList = document.createElement('ul');
         container.appendChild(userList);
         userList.setAttribute('class','user-list');
         userList.setAttribute('id','z-user-list');
         
-        let users = results.map( (result) => formatResults(result));
-        let list = users.map((user) => renderTemplate(templateString,user));
-
+        let list = results.map((result) => renderTemplate(templateString, result));
         list.forEach( (item) => userList.insertAdjacentHTML("beforeend", item));
     }
 
