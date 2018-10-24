@@ -4,6 +4,18 @@ function renderTemplate(templateString, data) {
     return templateString.replace(/\{\{\s*(.*?)\s*\}\}/g,(match,p1) => data[p1]);            
 }
 
+function formatResults (result) {
+    let user = {
+        photo: result.picture.large,
+        firstName: result.name.first,
+        lastName: result.name.last,
+        city: result.location.city,
+        state: result.location.state,
+        email: result.email 
+    } 
+    return user;
+}
+
 const templateString = `<li class="user">
 <img class="user-photo" src="{{ photo }}" alt="Photo of {{ firstName }} {{ lastName }}">
 <div class="user-name">{{ firstName }} {{ lastName }}</div>
@@ -21,23 +33,10 @@ const templateString = `<li class="user">
         userList.setAttribute('class','user-list');
         userList.setAttribute('id','z-user-list');
         
-        function formatResults (result) {
-            let user = {
-                photo: result.picture.large,
-                firstName: result.name.first,
-                lastName: result.name.last,
-                city: result.location.city,
-                state: result.location.state,
-                email: result.email 
-            } 
-            return user;
-        }
-
         let users = results.map( (result) => formatResults(result));
         let list = users.map((user) => renderTemplate(templateString,user));
 
         list.forEach( (item) => userList.insertAdjacentHTML("beforeend", item));
-        
     }
 
     function init() {
