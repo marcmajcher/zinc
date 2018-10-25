@@ -1,13 +1,12 @@
 'use strict';
 
-/* eslint-env browser */
-
 const Zinc = {};
 
 (() => {
     function renderComponent(element, content, userData) {
-        console.log(element, content); // eslint-disable-line no-console
+        console.log(element, content);
     }
+    console.log(userData);
 
     function init() {
         renderComponent('user-item', 'user', userData);
@@ -15,3 +14,4 @@ const Zinc = {};
 
     document.addEventListener('DOMContentLoaded', init);
 })();
+
