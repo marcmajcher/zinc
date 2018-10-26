@@ -18,4 +18,8 @@
         },
         email: 'jack.burton@example.com'
     };
+
+    
+    // this is where we can call Zinc.registerComponent with our necessary info
+
 })();
