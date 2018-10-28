@@ -18,37 +18,26 @@ const userData = {
 };
 
 (() => {
-    function renderComponent(element, content, userData) {
-        console.log('element: ', element, '| content: ',content);
-        // get parent element
-        element = document.querySelector(element);
 
-        function renderTemplate (templateFile, userData) {
-            //get template
+    Zinc.registerComponent = function (elementName, templateFile, dataObject) {
+        let element = document.querySelector(elementName);
+        function renderTemplate (templateFile, dataObject) {
             return fetch (templateFile+'.html')
             .then ( res => res.text())
-            //render template using data
             .then ((template) => {
                 return template.replace(/\{\{\s*(.*?)\s*\}\}/g, (match, p1) => {
-                    //UnNest data-String from user
                     return p1.split('.').reduce((acc, curr) => {
                         return acc[curr];
-                    }, userData)
+                    }, dataObject)
                 })
             })
-            //append template to parent element
             .then ( html => element.innerHTML = html)
         }
-
-        renderTemplate(content, userData);
-        
-        
-        
+        renderTemplate(templateFile, dataObject); 
     }
 
-
     function init() {
-        renderComponent('user-item', 'user', userData);
+        Zinc.registerComponent('user-item', 'user', userData);
 
     }
 
