@@ -2,24 +2,10 @@
 
 const Zinc = {};
 
-const userData = {
-    picture: {
-        thumbnail: 'https://f4.bcbits.com/img/0001142378_10.jpg'
-    },
-    name: {
-        first: 'Jack',
-        last: 'Burton'
-    },
-    location: {
-        city: 'San Francisco',
-        state: 'CA'
-    },
-    email: 'jack.burton@example.com'
-};
-
 (() => {
     document.addEventListener('DOMContentLoaded', init)
-    Zinc.registerComponent = function (elementName, templateFile, dataObject) {
+    
+    Zinc.registerComponent = function (elementName, templateFile, dataObject, controller) {
         let element = document.querySelector(elementName);
         function renderTemplate (templateFile, dataObject) {
             return fetch (templateFile+'.html')
@@ -31,15 +17,20 @@ const userData = {
                     }, dataObject)
                 })
             })
-            .then ( html => element.innerHTML = html)
+            .then ( html => element.insertAdjacentHTML('beforeend',html))
         }
         renderTemplate(templateFile, dataObject); 
     }
 
     function init() {
-        Zinc.registerComponent('user-item', 'user', userData);
-
-    }
-
-    ;
+        fetch('https://randomuser.me/api/?results=5')
+            .then(res => res.json())
+            .then( (res) => {
+                res.results.forEach( (result) => {
+                    Zinc.registerComponent('user-item','user',result)
+                })
+            })
+        
+    };
+    
 })();
