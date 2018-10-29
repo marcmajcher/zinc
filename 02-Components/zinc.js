@@ -18,7 +18,7 @@ const userData = {
 };
 
 (() => {
-
+    document.addEventListener('DOMContentLoaded', init)
     Zinc.registerComponent = function (elementName, templateFile, dataObject) {
         let element = document.querySelector(elementName);
         function renderTemplate (templateFile, dataObject) {
@@ -41,5 +41,5 @@ const userData = {
 
     }
 
-    document.addEventListener('DOMContentLoaded', init);
+    ;
 })();
