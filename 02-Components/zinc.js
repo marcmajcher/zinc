@@ -43,7 +43,7 @@ const Zinc = {
     function renderComponents() {
         console.log('renderComponents is called');
         Object.values(Zinc._components).forEach((component) => {
-            console.log(component);
+            renderComponent(component.componentName);
         });
     }
     
@@ -51,7 +51,7 @@ const Zinc = {
     Zinc.registerComponent = function (componentName, templateFile, data, controller) {
         console.log('1. registerComponent is called');
         Zinc._components[componentName] = {
-            componentName,
+            componentName: componentName,
             templateFile,
             data,
             controller
