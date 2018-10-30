@@ -5,6 +5,7 @@ const Zinc = {
 };
 
 (() => {
+    const domParser = new DOMParser();
     Zinc._components = {};
     document.addEventListener('DOMContentLoaded', init)
     
@@ -25,9 +26,18 @@ const Zinc = {
         const component = Zinc._components[componentName];
         const nodeList = document.querySelectorAll(componentName);
         nodeList.forEach( (node) => {
-            renderTemplate(component.templateFile, component.data) 
-            .then ((html) => node.insertAdjacentHTML('beforeend',html))
-        })
+            renderTemplate(component.templateFile, component.data)
+            .then ((html) => {
+                const doc = domParser.parseFromString(html, 'text/html');
+                const elem = node.insertAdjacentElement('beforeend', doc.firstChild.children[1].firstChild);
+                elem._state = {};
+                if (component.controller) {
+                    elem.controller = component.controller;
+                    elem.controller();
+                };
+                Zinc._components[componentName].element = elem;
+            });
+        });
     }
     
     function renderComponents() {
@@ -37,12 +47,14 @@ const Zinc = {
         });
     }
     
-    Zinc.registerComponent = function (componentName, templateFile, data) {
+    //this function will now take one config object instead of 4 arguments
+    Zinc.registerComponent = function (componentName, templateFile, data, controller) {
         console.log('1. registerComponent is called');
         Zinc._components[componentName] = {
             componentName,
             templateFile,
-            data
+            data,
+            controller
         };
         renderComponent (componentName);
     }

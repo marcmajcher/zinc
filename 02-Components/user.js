@@ -4,17 +4,18 @@
 /* globals Zinc */
 
 (() => {
-    function userController() {
+    function onClick() {
         this.addEventListener('click', () => {
             this.classList.toggle('hilight');
-            this.$state.hilit = !this.$state.hilit;
+            this.$state.hilight = !this.$state.hilitght;
         });
     }
 
     function populateList(users) {
         const myComponents = ['user-one', 'user-two', 'user-three', 'user-four', 'user-five'];
         for (let i = 0; i < users.length; i++) {
-            Zinc.registerComponent(myComponents[i], 'user', users[i], userController);
+            //Zinc.register will now take the config object
+            console.log(Zinc.registerComponent(myComponents[i], 'user', users[i], onClick));
         }
     }
 
